@@ -26,6 +26,6 @@ const AddressSchema = new Schema({
     }
 });
 
-const addressModel = model('Address', AddressSchema);
+const Address = model('Address', AddressSchema);
 
-export default addressModel;
+export default Address;

@@ -1,5 +1,19 @@
+import JWT from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator'
 import User from '../models/user-model.js'
+
+export const verifyUserToken = (req, res, next)=>{
+    try {
+        const decode = JWT.verify(
+            req.headers.authorization,
+            process.env.JWT_SECRET
+        );
+        next();
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export const validateUserDataResult = (req, res, next)=>{
 
