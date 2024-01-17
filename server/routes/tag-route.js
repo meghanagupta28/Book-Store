@@ -1,15 +1,14 @@
-// import { Router } from "express";
+import { Router } from "express";
 
-// const router = Router();
+const router = Router();
 
 // router.route('')
 // .get()
 // .post();
 
-// router.route(':name')
+// router.route('/:name')
 // .get()
-// .put()
 // .delete();
 
 
-// export default router;
+export default router;

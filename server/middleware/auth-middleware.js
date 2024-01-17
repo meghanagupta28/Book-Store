@@ -1,6 +1,7 @@
 import JWT from 'jsonwebtoken';
-import { check, validationResult } from 'express-validator'
-import User from '../models/user-model.js'
+import { check, validationResult } from 'express-validator';
+import { AppError } from '../errors/AppError.js';
+import User from '../models/user-model.js';
 
 export const verifyUserToken = (req, res, next)=>{
     try {
@@ -17,18 +18,15 @@ export const verifyUserToken = (req, res, next)=>{
 
 export const validateUserDataResult = (req, res, next)=>{
 
-    const errors = validationResult(req)
+    const errors = validationResult(req);
 
     if (errors.isEmpty()) {
-        return next()
+        return next();
     }
     const extractedErrors = []
-    errors.array().map(err => extractedErrors.push( err.msg ))
-    
-    return res.status(422).send({
-        success: false,
-        errors: extractedErrors,
-    })
+    errors.array().map(err => extractedErrors.push( err.msg ));
+
+    next(new AppError(422, true, extractedErrors))
 }
 
 export const validateRegistrationDataRules = ()=>{
@@ -38,11 +36,13 @@ export const validateRegistrationDataRules = ()=>{
         .withMessage("Name must not left empty")
         .isString()
         .isLength({ min: 1 })
+        .withMessage("Name must be of at least length 1")
         .isAlpha('en-US', {ignore: "-"})
         .withMessage("Name must not contain anything other than the alphabet"),
 
         check('password')
         .notEmpty()
+        .withMessage("Password must not be left empty")
         .isStrongPassword({
             minLength: 8,
             minLowercase: 1,
@@ -50,10 +50,11 @@ export const validateRegistrationDataRules = ()=>{
             minNumbers:1,
             minSymbols:1,
 
-        }),
+        }).withMessage("Please enter the password in the stipulated manner"),
 
         check('email')
         .notEmpty()
+        .withMessage("Email must not be left empty")
         .isEmail()
         .withMessage('Invalid email address')
         .trim()
@@ -73,7 +74,8 @@ export const validateRegistrationDataRules = ()=>{
         }),
 
         check('phone')
-        .notEmpty(),
+        .notEmpty()
+        .withMessage('Phone field should not be left empty'),
 
         check('address.address')
         .notEmpty()

@@ -3,11 +3,11 @@ import { Router } from "express";
 const router = Router();
 
 // router.route('/:userID')
-// .get()
+// .get();
 
-// router.route('/:userID/:productID')
-// .put()
+// router.route('/:userID/:bookID')
 // .post()
 // .delete();
+
 
 export default router;

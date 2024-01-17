@@ -1,10 +1,11 @@
 import { passwordComparison, passwordHashing } from "../helper/auth-helper.js";
 import User from "../models/user-model.js";
 import Address from "../models/address-model.js";
+import { AppError } from "../errors/AppError.js";
+import { asyncErrorHandler } from "../helper/async-error-handler.js";
 
-export const registerController = async(req, res)=>{
-    
-    try {
+export const registerController = asyncErrorHandler(async(req, res)=>{
+
         const { name, email, password, phone, address} = req.body;
 
         const hashedPassword = await passwordHashing(password);
@@ -35,26 +36,14 @@ export const registerController = async(req, res)=>{
             savedAddress
         })
         
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({
-            success: false,
-            message: 'User registration failed',
-            error
-        });
-    }
-}
+})
 
-export const loginController = async(req,res)=>{
-    try {
+export const loginController = asyncErrorHandler(async(req,res)=>{
         const { email, password } = req.body;
 
         const user = await User.findOne({email: email});
         if(!user){
-            res.status(200).send({
-                success: false,
-                message: 'Unregistered',
-            })
+            throw new AppError(200, true, 'Unregistered data');
         } else {
             const passwordCheck = await passwordComparison(password, user.password);
             if(passwordCheck){
@@ -63,19 +52,7 @@ export const loginController = async(req,res)=>{
                     message: 'Login Successful',
                 })
             } else {
-                res.status(200).send({
-                    success: false,
-                    message: 'Incorrect password or email',
-                })
+                throw new AppError(200, true, 'Incorrect password or email entered');
             }
-        }
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({
-            success: false,
-            message: 'Login failed',
-            error
-        })
-    }
-}
+        }  
+})

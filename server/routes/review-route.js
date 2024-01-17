@@ -2,12 +2,13 @@ import { Router } from "express";
 
 const router = Router();
 
-// router.route('/:userID')
-// .get()
+// router.route('/bookID')
+// .get();
 
-// router.route('/:userID/:productID')
-// .put()
+// router.route('/bookID/userID')
 // .post()
+// .put()
 // .delete();
+
 
 export default router;
