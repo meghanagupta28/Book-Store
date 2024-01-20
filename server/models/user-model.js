@@ -1,4 +1,6 @@
 import { Schema, model } from "mongoose";
+import Wishlist from './wishlist-model.js';
+import Cart from './cart-model.js';
 
 const userSchema = new Schema({
     username: {
@@ -32,5 +34,11 @@ const userSchema = new Schema({
 });
  
 const User = model('User', userSchema);
+
+userSchema.post('save', async function (user) {
+    await Wishlist.create({ userId: user._id });
+    await Cart.create({ userId: user._id });
+});
+
 
 export default User;

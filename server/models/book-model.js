@@ -16,6 +16,10 @@ const bookSchema = new Schema({
         type:Number,
         required:true,
     },
+    discountedPrice:{
+        type:Number,
+        required:true,
+    },
     publishingDate:{
         type:Date,
         required:true,
@@ -24,16 +28,16 @@ const bookSchema = new Schema({
         type:String,
         required:true,
     },
-    ISBN:{
+    isbn:{
         type:String,
         required:true,
     },
-    Tags:{
+    tags:{
         type:[Schema.Types.ObjectId],
         ref:'Tag',
         required: true
     },
-    Demographic:{
+    demographic:{
         type: String,
         enum:['18+', 'Kids', 'Teens'],
         required: true

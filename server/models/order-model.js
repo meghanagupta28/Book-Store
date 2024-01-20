@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
-const orderItemSchema = new Schema({
-    book:{
+const orderItem = {
+    bookId:{
         type: Schema.Types.ObjectId,
         ref: 'Book',
         required: true
@@ -10,17 +10,17 @@ const orderItemSchema = new Schema({
         type: Number,
         required: true
     }
-});
+};
 
 const orderSchema = new Schema({
-    user:{
+    userId:{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
         index: true
     },
-    order:{
-        type:[orderItemSchema],
+    items:{
+        type:[orderItem],
         required: true
     },
     address:{

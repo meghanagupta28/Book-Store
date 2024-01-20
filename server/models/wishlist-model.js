@@ -1,13 +1,14 @@
 import { Schema, model } from 'mongoose';
 
-const orderSchema = new Schema({
-    user:{
+const wishlistSchema = new Schema({
+    userId:{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
+        unique: true,
         index: true
     },
-    order:{
+    books:{
         type:[Schema.Types.ObjectId],
         ref: 'Book'
     }
@@ -15,6 +16,6 @@ const orderSchema = new Schema({
     timestamps: true
 });
 
-const Order = model('Order', orderSchema);
+const Wishlist = model('Wishlist', wishlistSchema);
 
-export default Order;
+export default Wishlist;

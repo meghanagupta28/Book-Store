@@ -1,12 +1,12 @@
-import mongoose, { Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const reviewSchema = new Schema({
-    user:{
+    userId:{
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    book:{
+    bookId:{
         type: Schema.Types.ObjectId,
         ref: 'Book',
         required: true,

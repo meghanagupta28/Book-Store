@@ -1,7 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-// import createHttpError from 'http-errors';
-import morgan from 'morgan'
 
 import dbConnect from './config/database.js';
 
@@ -23,13 +21,12 @@ dbConnect();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-// app.use(morgan);
 
-app.use('/auth', authRouter);
-app.use('/books', bookRouter);
-app.use('/tag', tagRouter);
-app.use('/cart', cartRouter);
-app.use('/wishlist', wishlistRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/books', bookRouter);
+app.use('/api/v1/tag', tagRouter);
+app.use('/api/v1/cart', cartRouter);
+app.use('/api/v1/wishlist', wishlistRouter);
 
 app.use(errorHandler);
 

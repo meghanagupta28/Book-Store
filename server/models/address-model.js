@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import User from './user-model.js'
 
 const AddressSchema = new Schema({
     address:{

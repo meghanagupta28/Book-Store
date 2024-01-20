@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 
-const cartItemSchema = new Schema({
-    book_id:{
+const cartItem = {
+    bookId:{
         type:Schema.Types.ObjectId,
         ref: 'Book',
     },
@@ -9,19 +9,20 @@ const cartItemSchema = new Schema({
         type:Number,
         default:1,
     },
-    selected_for_order:{
+    selectedForOrder:{
         type: Boolean,
         default: true,
     }
-
-});
+};
 
 const cartSchema = new Schema({
-    user_id:{
+    userId:{
         type:Schema.Types.ObjectId,
         ref: 'User',
+        unique: true,
+        required: true
     },
-    items: [cartItemSchema],
+    items: [cartItem],
 },{
     timestamps:true,
 })
