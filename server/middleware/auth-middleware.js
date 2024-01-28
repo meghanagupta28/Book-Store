@@ -1,20 +1,36 @@
-import JWT from 'jsonwebtoken';
-import { check, validationResult } from 'express-validator';
+import { check } from 'express-validator';
 import { AppError } from '../errors/AppError.js';
 import User from '../models/user-model.js';
+import { asyncErrorHandler } from '../helper/async-error-handler.js';
+import { decodeToken, verifyToken } from '../helper/jwt-helper.js';
 
-export const verifyUserToken = (req, res, next)=>{
-    try {
-        const decode = JWT.verify(
-            req.headers.authorization,
-            process.env.JWT_SECRET
-        );
-        next();
+export const requiresLogIn = asyncErrorHandler(async(req, res, next)=>{
+    const authorizationHeader = req.headers.authorization;
 
-    } catch (error) {
-        console.log(error);
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+        throw new AppError(401, true, 'JWT has to be provided in the "Bearer" format');
     }
-}
+
+    const token = authorizationHeader.split(' ')[1];
+
+    const verify = verifyToken(token);
+    if(!verify){
+        throw new AppError(404, true, 'JWT has to be provided');
+    }
+    next();
+})
+
+export const checkAdmin = asyncErrorHandler(async(req, res, next)=>{
+    const { userId } = decodeToken(req.headers.authorization);
+
+    const user = await User.findById(userId);
+
+    if(!user || !user.role || user.role !== 'admin'){
+        throw new AppError(403, 'Access denied. Admin privileges required.');
+    }
+    
+    next();
+})
 
 
 export const validateRegistrationDataRules = ()=>{

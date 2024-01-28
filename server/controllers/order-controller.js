@@ -4,15 +4,13 @@ import Order from '../models/order-model.js';
 
 
 export const getOrdersAll = asyncErrorHandler(async(req, res)=>{
-    const orders = res.locals.orders;
+    const { userId } = req.params;
 
-    const finalOrders = orders.populate('address').exec().populate('items.bookId', 'title author discountedPrice ');
+    const finalOrders = Order.find({ userId : userId }).populate('address').populate('items.bookId', 'title author discountedPrice ').exec();
 
     if(!finalOrders){
         throw new Error();
     }
-
-    delete res.locals.orders;
 
     res.status(200).json(finalOrders);
 })

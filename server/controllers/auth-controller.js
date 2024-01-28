@@ -3,6 +3,7 @@ import User from "../models/user-model.js";
 import Address from "../models/address-model.js";
 import { AppError } from "../errors/AppError.js";
 import { asyncErrorHandler } from "../helper/async-error-handler.js";
+import { createToken } from "../helper/jwt-helper.js";
 
 export const registerController = asyncErrorHandler(async(req, res)=>{
 
@@ -44,15 +45,39 @@ export const loginController = asyncErrorHandler(async(req,res)=>{
         const user = await User.findOne({email: email});
         if(!user){
             throw new AppError(200, true, 'Unregistered data');
-        } else {
-            const passwordCheck = await passwordComparison(password, user.password);
-            if(passwordCheck){
-                res.status(200).send({
-                    success: true,
-                    message: 'Login Successful',
-                })
-            } else {
-                throw new AppError(200, true, 'Incorrect password or email entered');
-            }
-        }  
+        } 
+
+        const passwordCheck = await passwordComparison(password, user.password);
+        if(!passwordCheck){
+            throw new AppError(200, true, 'Incorrect password or email entered');
+        }
+
+        const token = createToken({'userId': user._id});
+
+        res.status(200).send({
+            success: true,
+            message: 'Login Successful',
+            user:{
+                name: user.name,
+                email: user.email,
+            },
+            token,
+        });
+})
+
+export const deleteUser = asyncErrorHandler(async(req, res)=>{
+    const { userId } = req.params;
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if(!deletedUser){
+        throw new AppError(500,true, 'User account deletion failed')
+    }
+
+    res.status(204).json({
+        success: true,
+        message: 'User account delete successfully',
+        deletedUser
+    })
+    
 })

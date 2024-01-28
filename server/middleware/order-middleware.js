@@ -4,19 +4,6 @@ import { asyncErrorHandler } from '../helper/async-error-handler.js'
 import Order from '../models/order-model.js'
 
 
-export const getOrdersByUserId = asyncErrorHandler(async(req, res, next)=>{
-    const { userId } = req.params;
-
-    const order = Order.find({ userId : userId }).exec();
-
-    if(!order){
-        throw new AppError(500, 'Could not obtain orders');
-    }
-
-    res.locals.orders = order;
-    next();
-})
-
 import { check } from 'express-validator';
 
 export const validateOrderDataRules = () => {

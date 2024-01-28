@@ -8,8 +8,8 @@ const router = Router();
 router.route('/:userId')
 .get(getWishlist);
 
-router.route('/:userID/:bookId')
-.post(validateWishlistDataRules(),checkValidationResult,addToWishlist)
+router.route('/:userId/:bookId')
+.put(validateWishlistDataRules(),checkValidationResult,addToWishlist)
 .delete(deleteFromWishlist);
 
 

@@ -32,13 +32,18 @@ const userSchema = new Schema({
         default:false,
     }
 });
- 
-const User = model('User', userSchema);
 
 userSchema.post('save', async function (user) {
     await Wishlist.create({ userId: user._id });
     await Cart.create({ userId: user._id });
 });
+
+userSchema.pre('findOneAndDelete', {document: true, query:true}, (next)=>{
+    
+});
+ 
+const User = model('User', userSchema);
+
 
 
 export default User;
